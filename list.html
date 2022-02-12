@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Material Design for Bootstrap</title>
+    <!-- MDB icon -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/all.css">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/css/bootstrap.min.css">
+    <!-- Material Design Bootstrap -->
+    <link rel="stylesheet" href="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/css/mdb.min.css">
+    <!-- Your custom styles (optional) -->
+    <link rel="stylesheet" href="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/css/style.css">
+</head>
+
+<body>
+
+    <!-- Start your project here-->
+    <div class="card-body rounded-bottom" style="height: 100%;width: 100%;padding: 0px;">
+        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;" id="int_">
+            <button class="btn aqua-gradient" onclick="mntdir()" id="intG">选择歌曲文件夹</button>
+            <input class="btn aqua-gradient" type="file" id="intAlt" style="display: none;" webkitdirectory multiple="true"> </button>
+        </div>
+        <div class="list-group">
+        </div>
+    </div>
+    <!-- End your project here-->
+
+    <!-- jQuery -->
+    <script type="text/javascript"
+        src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript"
+        src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript"
+        src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript"
+        src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/mdb.min.js"></script>
+    <!-- Your custom scripts (optional) -->
+    <script type="text/javascript">
+        num = 0
+        window.onload = function () {
+            if (!window.showDirectoryPicker) {
+                $("#intG").css("display", "none")
+                $("#intAlt").css("display", "block")
+                document.getElementById("intAlt").addEventListener("change",function () {mntdir_()})
+            }
+        }
+
+        async function mntdir() {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                for await (const entry of dirHandle.values()) {
+                    if (entry.kind == "file") {
+                        $("#int_").remove()
+                        if (num % 2) {
+                            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark">' + entry.name + '</a>')
+                        } else {
+                            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary">' + entry.name + '</a>')
+                        }
+                        window.parent.musiclist.push(entry.name)
+                        await window.parent.musicfilelist.push(await entry.getFile())
+                        //window.parent.document.getElementById("mlist").contentWindow.musicfilelist
+                        num++
+                    }
+
+                }
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+        function mntdir_() {
+            window.parent.musicfilelist = document.getElementById("intAlt").files
+            for (let index = 0; index < window.parent.musicfilelist.length; index++) {
+                const element = window.parent.musicfilelist[index];
+                window.parent.musiclist.push(element.name)
+                $("#int_").remove()
+                if (num % 2) {
+                    $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark">' + element.name + '</a>')
+                } else {
+                    $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary">' + element.name + '</a>')
+                }
+                num++
+
+            }
+        }
+        function c(music) {
+            window.parent.nowmusic = music
+            url = URL.createObjectURL(window.parent.musicfilelist[music])
+            window.parent.document.getElementById("player").src = url
+            window.parent.play = false
+            window.parent.startstop()
+            window.parent.refrush()
+        }
+
+    </script>
+
+</body>
+
+</html>
