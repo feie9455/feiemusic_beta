@@ -22,170 +22,206 @@
   }
 </style>
 
-<body>
+<body style="background-repeat: no-repeat;background-size: auto 100vh;background-color: black;background-position:center;height: 100vh;">
 
   <!-- Start your project here-->
+  <input type="file" id="file" onchange="getFilePath()" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
   <audio id="player" style="display: none;" ended="next()"></audio>
-  <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div style="width: 400px;position: absolute;right: 20px;" id="main">
+    <div class="card" style="position: relative;top: 326px;">
+      <div class="card-body rounded-bottom" style="height: 295px;padding: 0px;">
+        <iframe src="list.html" style="height: 100%;width: 100%;border: 0px;" id="mlist">
 
-    <div style="width: 400px;">
-      <div class="card" style="position: relative;top: 330px;">
-        <div class="card-body rounded-bottom" style="height: 295px;padding: 0px;">
-          <iframe src="list.html" style="height: 100%;width: 100%;border: 0px;" id="mlist">
-
-          </iframe>
+        </iframe>
+      </div>
+    </div>
+    <div class="card" style="position: relative;top: -308px;height: 344px; ;">
+      <div class="view overlay" style="padding: 32px;">
+        <h5 class="card-title" id="title" style="height: 56px;display: inline-box;width: 286px; ;">Feiemusic</h5>
+        <i class="fas fa-arrows-alt" style="display: inline;float: right;position: relative;top: -64px;" id="drag"></i>
+        <i class="fas fa-image" style="float: right;margin-right: 8px;position: relative;top: -64px;" onclick="bgp()"></i><br><br>
+        <p class="card-text" style="height: 32px;position: relative;top: -48px;" id="lyc">暂无歌词</p>
+        <div class="d-flex justify-content-center my-4" style="margin-top: 0px;margin-left: 0px;height: 44px;">
+          <form class="range-field w-75">
+            <input id="len" class="border-0" type="range" min="0" max="1" value="0" style="margin-top: 5px;" />
+          </form>
+          <p style="width: 32px;margin-left: 4px;margin-top: 4px;" id="nowtime">0:00</p>
+          <span class="font-weight-bold text-primary ml-2 mt-1 valueSpan"></span>
+        </div>
+        <div id="buttongroup" class="d-flex justify-content-center align-items-center"
+          style="width: 350px;position: relative;left: -7px;top: -20px;">
+          <button type="button" class="btn-floating btn-primary">
+            <i class="fas fa-fast-backward" onclick="gbackward()"></i>
+          </button>
+          <button type="button" class="btn-floating btn-primary">
+            <i class="fas fa-backward" onclick="backward()"></i>
+          </button>
+          <button type="button" class="btn-floating btn-lg btn-default" id="playbnt">
+            <i class="fas fa-play" onclick="startstop()" id="playicon"></i>
+          </button>
+          <button type="button" class="btn-floating btn-primary">
+            <i class="fas fa-forward" onclick="forward()"></i>
+          </button>
+          <button type="button" class="btn-floating btn-primary">
+            <i class="fas fa-fast-forward" onclick="gforward()"></i>
+          </button>
         </div>
       </div>
-      <div class="card" style="position: relative;top: -308px;">
-        <div class="view overlay" style="padding: 32px;">
-          <h5 class="card-title" id="title" style="height: 48px;">Feiemusic</h5>
-          <p class="card-text" style="height: 48px;" id="lyc">暂无歌词</p>
-          <div class="d-flex justify-content-center my-4" style="margin-top: 0px;margin-left: 0px;height: 44px;">
-            <form class="range-field w-75">
-              <input id="len" class="border-0" type="range" min="0" max="1" value="0" style="margin-top: 5px;"/>
-            </form>
-            <p style="width: 32px;margin-left: 4px;margin-top: 4px;" id="nowtime">0:00</p>
-            <span class="font-weight-bold text-primary ml-2 mt-1 valueSpan"></span>
-          </div>
-          <div id="buttongroup" class="d-flex justify-content-center align-items-center"
-            style="width: 350px;position: relative;left: -7px;">
-
-
-            <button type="button" class="btn-floating btn-primary">
-              <i class="fas fa-fast-backward" onclick="gbackward()"></i>
-            </button>
-            <button type="button" class="btn-floating btn-primary">
-              <i class="fas fa-backward" onclick="backward()"></i>
-            </button>
-            <button type="button" class="btn-floating btn-lg btn-default" id="playbnt">
-              <i class="fas fa-play" onclick="startstop()" id="playicon"></i>
-            </button>
-            <button type="button" class="btn-floating btn-primary">
-              <i class="fas fa-forward" onclick="forward()"></i>
-            </button>
-            <button type="button" class="btn-floating btn-primary">
-              <i class="fas fa-fast-forward" onclick="gforward()"></i>
-            </button>
-
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
-  <!-- End your project here-->
-
-  <!-- jQuery -->
-  <script type="text/javascript"
-    src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/jquery.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript"
-    src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript"
-    src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/bootstrap.min.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/mdb.min.js"></script>
-  <!-- Your custom scripts (optional) -->
-  <script type="text/javascript">
-    play = false
-    musiclist = []
-    musicfilelist = []
-    nowmusic = 0
-    function startstop() {
-      if (play) {
-        play = false
-        $("#playicon").removeClass("fas fa-pause");
-        $("#playicon").addClass("fas fa-play")
-        $("#player")[0].pause()
-      } else {
-        play = true
-        $("#playicon").removeClass("fas fa-play");
-        $("#playicon").addClass("fas fa-pause")
-        if(!$("#player")[0].src){URL.createObjectURL(musicfilelist[nowmusic])}
-
-        $("#player")[0].play()
-        setTimeout(() => {
-          document.getElementById("len").max = Math.floor(document.getElementById("player").duration)
-          document.getElementById("len").value = Math.floor(document.getElementById("player").currentTime)
-
-        }, 200);
-        setInterval(() => {
-          refrush()
-        }, 1000);
-      }
-    }
-
-    function _padZero({ num, length = 2, position = "left" }) {
-      let len = num.toString().length;
-      if (position === "left") {
-        while (len < length) {
-          num = "0" + num;
-          len++;
-        }
-      } else if (position === "right") {
-        while (len < length) {
-          num = num + "0";
-          len++;
-        }
-      }
-      return num;
-    }
-    function forward() {
-      document.getElementById("player").currentTime = document.getElementById("player").currentTime + 10
-      refrush()
-    }
-    function backward() {
-      if (document.getElementById("player").currentTime >= 10) {
-        document.getElementById("player").currentTime = document.getElementById("player").currentTime - 10
-      } else {
-        document.getElementById("player").currentTime = 0
-      }
-      refrush()
-    }
-    function gforward() {
-      if (musicfilelist.length-1 >= nowmusic + 1) {
-        url = URL.createObjectURL(musicfilelist[nowmusic + 1])
-        nowmusic=nowmusic+1
-      } else {
-        url = URL.createObjectURL(musicfilelist[0])
-        nowmusic=0
-      }
-      
-      document.getElementById("player").src = url
-      play = false
-      startstop()
-      refrush()
-
-    }
-    function gbackward() {
-      if (nowmusic >= 1) {
-        url = URL.createObjectURL(musicfilelist[nowmusic - 1])
-        nowmusic=nowmusic-1
-      } else {
-        url = URL.createObjectURL(musicfilelist[musicfilelist.length-1])
-        nowmusic=musicfilelist.length-1
-      }
-      document.getElementById("player").src = url
-      play = false
-      startstop()
-      refrush()
-    }
-
-
-    function refrush() {
-      document.getElementById("len").value = Math.floor(document.getElementById("player").currentTime)
-      document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero({ num: Math.floor(document.getElementById("player").currentTime) % 60 }))
-      document.title=document.getElementById("title").innerHTML = musiclist[nowmusic]
-      if(document.getElementById("player").currentTime==document.getElementById("player").duration){
-        next()
-      }
-    }
-    function next(){
-      gforward()
-    }
-  </script>
-
 </body>
+<!-- End your project here-->
+
+<!-- jQuery -->
+<script type="text/javascript" src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript"
+  src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/mdb.min.js"></script>
+<!-- Your custom scripts (optional) -->
+<script type="text/javascript">
+  play = false
+  musiclist = []
+  musicfilelist = []
+  nowmusic = 0
+  function startstop() {
+    if (play) {
+      play = false
+      $("#playicon").removeClass("fas fa-pause");
+      $("#playicon").addClass("fas fa-play")
+      $("#player")[0].pause()
+    } else {
+      play = true
+      $("#playicon").removeClass("fas fa-play");
+      $("#playicon").addClass("fas fa-pause")
+      if (!$("#player")[0].src) { URL.createObjectURL(musicfilelist[nowmusic]) }
+
+      $("#player")[0].play()
+      setTimeout(() => {
+        document.getElementById("len").max = Math.floor(document.getElementById("player").duration)
+        document.getElementById("len").value = Math.floor(document.getElementById("player").currentTime)
+
+      }, 200);
+      setInterval(() => {
+        refrush()
+      }, 1000);
+    }
+  }
+
+  function _padZero({ num, length = 2, position = "left" }) {
+    let len = num.toString().length;
+    if (position === "left") {
+      while (len < length) {
+        num = "0" + num;
+        len++;
+      }
+    } else if (position === "right") {
+      while (len < length) {
+        num = num + "0";
+        len++;
+      }
+    }
+    return num;
+  }
+  function forward() {
+    document.getElementById("player").currentTime = document.getElementById("player").currentTime + 10
+    refrush()
+  }
+  function backward() {
+    if (document.getElementById("player").currentTime >= 10) {
+      document.getElementById("player").currentTime = document.getElementById("player").currentTime - 10
+    } else {
+      document.getElementById("player").currentTime = 0
+    }
+    refrush()
+  }
+  function gforward() {
+    if (musicfilelist.length - 1 >= nowmusic + 1) {
+      url = URL.createObjectURL(musicfilelist[nowmusic + 1])
+      nowmusic = nowmusic + 1
+    } else {
+      url = URL.createObjectURL(musicfilelist[0])
+      nowmusic = 0
+    }
+
+    document.getElementById("player").src = url
+    play = false
+    startstop()
+    refrush()
+
+  }
+  function gbackward() {
+    if (nowmusic >= 1) {
+      url = URL.createObjectURL(musicfilelist[nowmusic - 1])
+      nowmusic = nowmusic - 1
+    } else {
+      url = URL.createObjectURL(musicfilelist[musicfilelist.length - 1])
+      nowmusic = musicfilelist.length - 1
+    }
+    document.getElementById("player").src = url
+    play = false
+    startstop()
+    refrush()
+  }
+
+
+  function refrush() {
+    document.getElementById("len").value = Math.floor(document.getElementById("player").currentTime)
+    document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero({ num: Math.floor(document.getElementById("player").currentTime) % 60 }))
+    document.title = document.getElementById("title").innerHTML = musiclist[nowmusic]
+    if (document.getElementById("player").currentTime == document.getElementById("player").duration) {
+      next()
+    }
+  }
+  function next() {
+    gforward()
+  }
+  //document.querySelector("#drag").ondrag = function () {
+  //  console.log('拖拽中');
+  //  $("#main").css("top", event.pageY - 24)
+  //  $("#main").css("left", event.pageX - 360)
+  //}
+  //
+  //document.querySelector("#drag").ondragend = function () {
+  //  $("#main").css("top", event.pageY - 24)
+  //  $("#main").css("left", event.pageX - 360)
+  //}
+  //
+  function bgp(){
+    $("#file").trigger("click");
+  }
+  function getFilePath(){
+    $("body").css("background-image", URL.createObjectURL(document.getElementById("file").files[0]))
+    document.body.background=URL.createObjectURL(document.getElementById("file").files[0])
+  }
+  window.onload = function () {
+    var drag = document.getElementById('drag');
+    drag.onmousedown = function (event) {
+      var event = event || window.event;
+      var diffX = event.clientX - drag.offsetLeft;
+      var diffY = event.clientY - drag.offsetTop;
+      if (typeof drag.setCapture !== 'undefined') {
+        drag.setCapture();
+      }
+      document.onmousemove = function (event) {
+        var event = event || window.event;
+        $("#main").css("top", event.pageY - 24)
+        $("#main").css("left", event.pageX - 360)
+      }
+      document.onmouseup = function (event) {
+        this.onmousemove = null;
+        this.onmouseup = null; 
+        if (typeof drag.releaseCapture != 'undefined') {
+          drag.releaseCapture();
+        }
+      }
+    }
+  }
+</script>
+
+
 
 </html>
