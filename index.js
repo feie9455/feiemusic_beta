@@ -26,6 +26,25 @@ function startstop() {
     }
 
     $("#player")[0].play()
+    document.querySelector("#c" + nowmusic).scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+    for (let index = 0; index < musicfilelist.length; index++) {
+      if (index % 2) {
+        $("#c" + index).removeClass("list-group-item list-group-item-action list-group-item-warning waves-effect")
+        $("#c" + index).addClass("list-group-item list-group-item-action list-group-item-dark waves-effect")
+      } else {
+        $("#c" + index).removeClass("list-group-item list-group-item-action list-group-item-warning waves-effect")
+        $("#c" + index).addClass("list-group-item list-group-item-action list-group-item-primary waves-effect")
+      }
+    }
+    if (nowmusic % 2) {
+      $("#c" + nowmusic).removeClass("list-group-item list-group-item-action list-group-item-dark waves-effect")
+      $("#c" + nowmusic).addClass("list-group-item list-group-item-action list-group-item-warning waves-effect")
+    }
+    else {
+      $("#c" + nowmusic).removeClass("list-group-item list-group-item-action list-group-item-primary waves-effect")
+      $("#c" + nowmusic).addClass("list-group-item list-group-item-action list-group-item-warning waves-effect")
+    }
+
     const element = musictagslist[nowmusic];
     var picture = element.tags.picture; // create reference to track art 
     var base64String = "";
@@ -38,7 +57,7 @@ function startstop() {
     img.src = imageUri
     var canvas = document.getElementById('tutorial');
     var ctx = canvas.getContext("2d");
-    setTimeout(function(){
+    setTimeout(function () {
       ctx.drawImage(img, 0, 0, 64, 64)
       imageUri = canvas.toDataURL("image/jpeg", 1)
       changeFavicon(imageUri)
@@ -59,11 +78,11 @@ function startstop() {
 function _padZero(num) {
   let len = num.toString().length;
 
-    while (len < 2) {
-      num = "0" + num;
-      len++;
-    }
-  
+  while (len < 2) {
+    num = "0" + num;
+    len++;
+  }
+
   return num;
 }
 function forward() {
@@ -112,7 +131,7 @@ function refrush() {
   if (initok) {
     document.getElementById("len").ariaValueNow = Math.floor(document.getElementById("player").currentTime)
     if (document.getElementById("player").duration) {
-      document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").currentTime) % 60 )) + " / " + String(Math.floor(document.getElementById("player").duration / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").duration) % 60 ))
+      document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").currentTime) % 60)) + " / " + String(Math.floor(document.getElementById("player").duration / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").duration) % 60))
     } document.title = musictagslist[nowmusic].tags.title + "-" + musictagslist[nowmusic].tags.artist
     document.getElementById("title").innerHTML = musictagslist[nowmusic].tags.title
     document.getElementById("artist").innerHTML = musictagslist[nowmusic].tags.artist
@@ -153,7 +172,7 @@ window.onload = function () {
     $("#int_").append("<p style='color:red'>Your browser does not support FileSystem Access API. Some functions may be limited.</p>")
   }
 
-  setInterval(function(){
+  setInterval(function () {
     refrush()
   }, 1000);
 
@@ -179,7 +198,7 @@ window.onload = function () {
     }
   }
 }
-function changeFavicon(link){
+function changeFavicon(link) {
   let $favicon = document.querySelector('link[rel="icon"]');
   // If a <link rel="icon"> element already exists,
   // change its href to the given link.
@@ -216,40 +235,40 @@ function mntdir_() {
     const element = document.getElementById("intAlt").files[index];
     if (validationEnd(element.name, ".mp3")) {
 
-    musicfilelist.push(element)
-    musiclist.push(element.name)
-    musicfilelist
-    $("#int_").css("display","none")
-    if (num % 2) {
-      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect">' + element.name + '</a>')
-    } else {
-      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary waves-effect">' + element.name + '</a>')
-    }
-
-    var tags = {};
-    jsmediatags.read(element, {
-      onSuccess: function (tag) {
-        musictagslist.push(tag)
-
-      },
-      onError: function (error) {
+      musicfilelist.push(element)
+      musiclist.push(element.name)
+      musicfilelist
+      $("#int_").css("display", "none")
+      if (num % 2) {
+        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect" id="c' + num + '">' + element.name + '</a>')
+      } else {
+        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary waves-effect" id="c' + num + '">' + element.name + '</a>')
       }
-    });
 
-    num++
-  }else if(validationEnd(element.name, ".lrc")){
-    musicfilelist.push(element)
-    musiclist.push(element.name)
-    musicfilelist
-    $("#int_").remove()
-    if (num % 2) {
-      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark">' + element.name + '</a>')
-    } else {
-      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary">' + element.name + '</a>')
+      var tags = {};
+      jsmediatags.read(element, {
+        onSuccess: function (tag) {
+          musictagslist.push(tag)
+
+        },
+        onError: function (error) {
+        }
+      });
+
+      num++
+    } else if (validationEnd(element.name, ".lrc")) {
+      musicfilelist.push(element)
+      musiclist.push(element.name)
+      musicfilelist
+      $("#int_").remove()
+      if (num % 2) {
+        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect" id="c' + num + '">' + element.name + '</a>')
+      } else {
+        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary waves-effect" id="c' + num + '">' + element.name + '</a>')
+      }
+
+
     }
-
-
-  }
   }
 }
 function c(music) {
