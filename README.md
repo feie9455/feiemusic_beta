@@ -8,3 +8,6 @@ You can also find on Steam community: [Steam community](https://steamcommunity.c
 
 
 ![Example](https://user-images.githubusercontent.com/89433346/153753965-5416a333-de5a-46b5-848c-f422abdd06e5.png)
+
+## Updata log
+### 2022/2/13

@@ -6,9 +6,12 @@ musictagslist = []
 musicpiclist = []
 musictpiclist = []
 tpicdata = []
+playedlist = []
 nowmusic = null
 initok = false
 var jsmediatags = window.jsmediatags;
+playmode = 1
+nowplaynum = 0
 function startstop() {
   if (play) {
     play = false
@@ -23,6 +26,8 @@ function startstop() {
     if (!$("#player")[0].src) {
       nowmusic = 0
       $("#player")[0].src = URL.createObjectURL(musicfilelist[nowmusic])
+      playedlist.push(nowmusic)
+
     }
 
     $("#player")[0].play()
@@ -98,38 +103,68 @@ function backward() {
   refrush()
 }
 function gforward() {
-  if (musicfilelist.length - 1 >= nowmusic + 1) {
-    url = URL.createObjectURL(musicfilelist[nowmusic + 1])
-    nowmusic = nowmusic + 1
+  if (playmode) {
+    if (musicfilelist.length - 1 >= nowmusic + 1) {
+      url = URL.createObjectURL(musicfilelist[nowmusic + 1])
+      nowmusic = nowmusic + 1
+    } else {
+      if (playmode == 2) {
+        url = URL.createObjectURL(musicfilelist[0])
+        nowmusic = 0
+      }
+    }
+
   } else {
-    url = URL.createObjectURL(musicfilelist[0])
-    nowmusic = 0
+    nowmusic = Math.ceil(Math.random() * musiclist.length)-1
+    url = URL.createObjectURL(musicfilelist[nowmusic])
+
   }
 
   document.getElementById("player").src = url
   play = false
   startstop()
   refrush()
-
+  playedlist.push(nowmusic)
+  nowplaynum++
+  nowplaynum = playedlist.length - 1
 }
 function gbackward() {
-  if (nowmusic >= 1) {
-    url = URL.createObjectURL(musicfilelist[nowmusic - 1])
-    nowmusic = nowmusic - 1
+  if (playmode) {
+    if (nowmusic >= 1) {
+      url = URL.createObjectURL(musicfilelist[nowmusic - 1])
+      nowmusic = nowmusic - 1
+    } else {
+
+      url = URL.createObjectURL(musicfilelist[musicfilelist.length - 1])
+      nowmusic = musicfilelist.length - 1
+    }
+
   } else {
-    url = URL.createObjectURL(musicfilelist[musicfilelist.length - 1])
-    nowmusic = musicfilelist.length - 1
+    if (nowplaynum - 1 >= 0) {
+      nowmusic = playedlist[nowplaynum - 1]
+      url = URL.createObjectURL(musicfilelist[nowmusic])
+      nowplaynum--
+    } else {
+      nowmusic = playedlist[0]
+      url = URL.createObjectURL(musicfilelist[nowmusic])
+    }
   }
   document.getElementById("player").src = url
   play = false
   startstop()
   refrush()
+
+
 }
 
 
 function refrush() {
   if (initok) {
     document.getElementById("len").ariaValueNow = Math.floor(document.getElementById("player").currentTime)
+    if (document.getElementById("player").currentTime == document.getElementById("player").duration) {
+      next()
+    }
+
     if (document.getElementById("player").duration) {
       document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").currentTime) % 60)) + " / " + String(Math.floor(document.getElementById("player").duration / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").duration) % 60))
     } document.title = musictagslist[nowmusic].tags.title + "-" + musictagslist[nowmusic].tags.artist
@@ -138,9 +173,6 @@ function refrush() {
     document.getElementById("len").ariaValueMax = Math.floor(document.getElementById("player").duration)
     document.getElementById("len").ariaValueNow = Math.floor(document.getElementById("player").currentTime)
     $("#len").css("width", String(Math.floor(document.getElementById("player").currentTime) / Math.floor(document.getElementById("player").duration) * 100 + "%"));
-    if (document.getElementById("player").currentTime == document.getElementById("player").duration) {
-      next()
-    }
   }
 }
 function next() {
@@ -281,7 +313,7 @@ function savepictrue() {
   bgpic = document.getElementById("file").files[0]
   var reader = new FileReader();
   reader.readAsDataURL(bgpic);
-  reader.onload = function (ev) { 
+  reader.onload = function (ev) {
     var dataURL = ev.target.result;
     if (localStorage.getItem("bgpic")) {
       localStorage.removeItem("bgpic");
@@ -291,5 +323,26 @@ function savepictrue() {
     } catch (error) {
       alert("Picture is too large. I cannot handle it. (っ °Д °;)っ")
     }
+  }
+}
+
+function changeplaymode() {
+  switch (playmode) {
+    case 2:
+      playmode = 0
+      $("#playmode").removeClass("fas fa-redo");
+      $("#playmode").addClass("fas fa-random");
+      break;
+    case 0:
+      playmode = 1
+      $("#playmode").removeClass("fas fa-random");
+      $("#playmode").addClass("fas fa-exchange-alt");
+      break;
+    case 1:
+      playmode = 2
+      $("#playmode").removeClass("fas fa-exchange-alt");
+      $("#playmode").addClass("fas fa-redo");
+
+      break;
   }
 }

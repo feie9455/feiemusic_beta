@@ -122,7 +122,10 @@
         </div>
       </div>
     </div>
-<div class="card" style="width: 180px;height: 80px;position: relative;bottom: 850px;left: 300px;z-index: 500;display: none;padding: 8px;" id="savepicConfirm">
+
+<button type="button" class="btn-floating btn-primary" onclick="changeplaymode(this.value)" style="position: relative;bottom: 640px;z-index: 500;left: 340px;">
+  <i class="fas fa-exchange-alt" id="playmode"></i>
+</button><div class="card" style="width: 180px;height: 80px;position: relative;bottom: 920px;left: 300px;z-index: 500;display: none;padding: 8px;" id="savepicConfirm">
   <p style="margin-bottom: 0px;"> Save this pictrue?</p>
   <button type="button" class="btn btn-light btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;" onclick="$('#savepicConfirm').css('display','none')">No</button>
   <button type="button" class="btn btn-success btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;" onclick="$('#savepicConfirm').css('display','none');savepictrue()">Yes</button>
