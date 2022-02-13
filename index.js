@@ -157,6 +157,7 @@ window.onload = function () {
     $("#intG").css("display", "none")
     $("#intAlt").css("display", "block")
     document.getElementById("intAlt").addEventListener("change", function () { mntdir_() })
+    $("#int_").append("<p style='color:red'>Your browser does not support FileSystem Access API. Some functions may be limited.</p>")
   }
 
   setInterval(() => {
@@ -222,7 +223,7 @@ async function mntdir() {
     const dirHandle = await window.showDirectoryPicker();
     for await (const entry of dirHandle.values()) {
       if (entry.kind == "file") {
-        if (validationEnd(entry.name, ".mp3") || validationEnd(entry.name, ".lrc")) {
+        if (validationEnd(entry.name, ".mp3")) {
           $("#int_").remove()
           if (num % 2) {
             $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect">' + entry.name + '</a>')
@@ -241,8 +242,18 @@ async function mntdir() {
             onError: function (error) {
             }
           });
-
-          //musicfilelist
+          num++
+        } else if (validationEnd(entry.name, ".lrc")) {
+          $("#int_").remove()
+          if (num % 2) {
+            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect">' + entry.name + '</a>')
+          } else {
+            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-primary waves-effect">' + entry.name + '</a>')
+          }
+          musiclist.push(entry.name)
+          file_ = await entry.getFile()
+          await musicfilelist.push(file_)
+          musictagslist.push("lrc")
           num++
         }
       }
@@ -254,18 +265,44 @@ async function mntdir() {
   }
 }
 function mntdir_() {
-  musicfilelist = document.getElementById("intAlt").files
-  for (let index = 0; index < musicfilelist.length; index++) {
-    const element = musicfilelist[index];
+  for (let index = 0; index < document.getElementById("intAlt").files.length; index++) {
+    const element = document.getElementById("intAlt").files[index];
+    if (validationEnd(element.name, ".mp3")) {
+
+    musicfilelist.push(element)
     musiclist.push(element.name)
+    musicfilelist
+    $("#int_").css("display","none")
+    if (num % 2) {
+      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect">' + element.name + '</a>')
+    } else {
+      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary waves-effect">' + element.name + '</a>')
+    }
+
+    var tags = {};
+    jsmediatags.read(element, {
+      onSuccess: function (tag) {
+        musictagslist.push(tag)
+
+      },
+      onError: function (error) {
+      }
+    });
+
+    num++
+  }else if(validationEnd(element.name, ".lrc")){
+    musicfilelist.push(element)
+    musiclist.push(element.name)
+    musicfilelist
     $("#int_").remove()
     if (num % 2) {
       $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark">' + element.name + '</a>')
     } else {
       $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary">' + element.name + '</a>')
     }
-    num++
 
+
+  }
   }
 }
 function c(music) {
