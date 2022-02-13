@@ -1,5 +1,5 @@
 play = false
-ca = window.parent.document.getElementById("mlist").contentWindow.document.getElementById('tutorial')
+ca = document.getElementById('tutorial')
 musiclist = []
 musicfilelist = []
 musictagslist = []
@@ -7,7 +7,7 @@ musicpiclist = []
 musictpiclist = []
 tpicdata = []
 nowmusic = null
-initok=false
+initok = false
 var jsmediatags = window.jsmediatags;
 function startstop() {
   if (play) {
@@ -15,19 +15,22 @@ function startstop() {
     $("#playicon").removeClass("fas fa-pause");
     $("#playicon").addClass("fas fa-play")
     $("#player")[0].pause()
-  } else {initok=true
+  } else {
+    initok = true
     play = true
     $("#playicon").removeClass("fas fa-play");
     $("#playicon").addClass("fas fa-pause")
-    if (!$("#player")[0].src) { nowmusic=0
-      $("#player")[0].src=URL.createObjectURL(musicfilelist[nowmusic]) }
+    if (!$("#player")[0].src) {
+      nowmusic = 0
+      $("#player")[0].src = URL.createObjectURL(musicfilelist[nowmusic])
+    }
 
     $("#player")[0].play()
     const element = musictagslist[nowmusic];
     var picture = element.tags.picture; // create reference to track art 
     var base64String = "";
     for (var i = 0; i < picture.data.length; i++) {
-        base64String += String.fromCharCode(picture.data[i]);
+      base64String += String.fromCharCode(picture.data[i]);
     }
     var imageUri = "data:" + picture.format + ";base64," + window.btoa(base64String);
 
@@ -39,8 +42,8 @@ function startstop() {
       ctx.drawImage(img, 0, 0, 64, 64)
       imageUri = canvas.toDataURL("image/jpeg", 1)
       changeFavicon(imageUri)
-    ;
-    
+        ;
+
     }, 200);
 
     //    imgdata = ctx.getImageData(0, 0, 64, 64)
@@ -51,10 +54,7 @@ function startstop() {
     //    var imageUri = "data:" + imgdata.format + ";base64," + window.btoa(base64String);
 
     setTimeout(() => {
-      document.getElementById("len").max = Math.floor(document.getElementById("player").duration)
-      document.getElementById("len").value = Math.floor(document.getElementById("player").currentTime)
-
-    }, 200);
+    }, 500);
   }
 }
 
@@ -116,16 +116,21 @@ function gbackward() {
 
 
 function refrush() {
-  if(initok){
-  document.getElementById("len").value = Math.floor(document.getElementById("player").currentTime)
-  document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero({ num: Math.floor(document.getElementById("player").currentTime) % 60 }))
-  document.title = musictagslist[nowmusic].tags.title+"-"+musictagslist[nowmusic].tags.artist
-  document.getElementById("title").innerHTML = musictagslist[nowmusic].tags.title
-  document.getElementById("artist").innerHTML = musictagslist[nowmusic].tags.artist
-  if (document.getElementById("player").currentTime == document.getElementById("player").duration) {
-    next()
+  if (initok) {
+    document.getElementById("len").ariaValueNow = Math.floor(document.getElementById("player").currentTime)
+    if (document.getElementById("player").duration) {
+      document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero({ num: Math.floor(document.getElementById("player").currentTime) % 60 })) + " / " + String(Math.floor(document.getElementById("player").duration / 60)) + ":" + String(_padZero({ num: Math.floor(document.getElementById("player").duration) % 60 }))
+    } document.title = musictagslist[nowmusic].tags.title + "-" + musictagslist[nowmusic].tags.artist
+    document.getElementById("title").innerHTML = musictagslist[nowmusic].tags.title
+    document.getElementById("artist").innerHTML = musictagslist[nowmusic].tags.artist
+    document.getElementById("len").ariaValueMax = Math.floor(document.getElementById("player").duration)
+    document.getElementById("len").ariaValueNow = Math.floor(document.getElementById("player").currentTime)
+    $("#len").css("width", String(Math.floor(document.getElementById("player").currentTime) / Math.floor(document.getElementById("player").duration) * 100 + "%"));
+    if (document.getElementById("player").currentTime == document.getElementById("player").duration) {
+      next()
+    }
   }
-}}
+}
 function next() {
   gforward()
 }
@@ -148,6 +153,12 @@ function getFilePath() {
   document.body.background = URL.createObjectURL(document.getElementById("file").files[0])
 }
 window.onload = function () {
+  if (!window.showDirectoryPicker) {
+    $("#intG").css("display", "none")
+    $("#intAlt").css("display", "block")
+    document.getElementById("intAlt").addEventListener("change", function () { mntdir_() })
+  }
+
   setInterval(() => {
     refrush()
   }, 1000);
@@ -162,8 +173,8 @@ window.onload = function () {
     }
     document.onmousemove = function (event) {
       var event = event || window.event;
-      $("#main").css("top", event.pageY )
-      $("#main").css("left", event.pageX - 384)
+      $("#main").css("top", event.pageY - 36)
+      $("#main").css("left", event.pageX - 400)
     }
     document.onmouseup = function (event) {
       this.onmousemove = null;
@@ -188,3 +199,81 @@ const changeFavicon = link => {
     document.head.appendChild($favicon);
   }
 };
+
+//list script
+num = 0
+
+
+//str：字符串    appoint：指定字符
+function validationEnd(str, appoint) {
+  str = str.toLowerCase();  //不区分大小写：全部转为小写后进行判断
+
+  var start = str.length - appoint.length;  //相差长度=字符串长度-特定字符长度
+  var char = str.substr(start, appoint.length);//将相差长度作为开始下标，特定字符长度为截取长度
+
+  if (char == appoint) { //两者相同，则代表验证通过
+    return true;
+  }
+  return false;
+}
+
+async function mntdir() {
+  try {
+    const dirHandle = await window.showDirectoryPicker();
+    for await (const entry of dirHandle.values()) {
+      if (entry.kind == "file") {
+        if (validationEnd(entry.name, ".mp3") || validationEnd(entry.name, ".lrc")) {
+          $("#int_").remove()
+          if (num % 2) {
+            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect">' + entry.name + '</a>')
+          } else {
+            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-primary waves-effect">' + entry.name + '</a>')
+          }
+          musiclist.push(entry.name)
+          file_ = await entry.getFile()
+          await musicfilelist.push(file_)
+          var tags = {};
+          jsmediatags.read(file_, {
+            onSuccess: function (tag) {
+              musictagslist.push(tag)
+
+            },
+            onError: function (error) {
+            }
+          });
+
+          //musicfilelist
+          num++
+        }
+      }
+    }
+
+  }
+  catch (e) {
+    console.error(e);
+  }
+}
+function mntdir_() {
+  musicfilelist = document.getElementById("intAlt").files
+  for (let index = 0; index < musicfilelist.length; index++) {
+    const element = musicfilelist[index];
+    musiclist.push(element.name)
+    $("#int_").remove()
+    if (num % 2) {
+      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark">' + element.name + '</a>')
+    } else {
+      $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary">' + element.name + '</a>')
+    }
+    num++
+
+  }
+}
+function c(music) {
+  nowmusic = music
+  url = URL.createObjectURL(musicfilelist[music])
+  document.getElementById("player").src = url
+  play = false
+  startstop()
+  refrush()
+}
+
