@@ -38,7 +38,7 @@ function startstop() {
     img.src = imageUri
     var canvas = document.getElementById('tutorial');
     var ctx = canvas.getContext("2d");
-    setTimeout(() => {
+    setTimeout(function(){
       ctx.drawImage(img, 0, 0, 64, 64)
       imageUri = canvas.toDataURL("image/jpeg", 1)
       changeFavicon(imageUri)
@@ -53,24 +53,17 @@ function startstop() {
     //    }
     //    var imageUri = "data:" + imgdata.format + ";base64," + window.btoa(base64String);
 
-    setTimeout(() => {
-    }, 500);
   }
 }
 
-function _padZero({ num, length = 2, position = "left" }) {
+function _padZero(num) {
   let len = num.toString().length;
-  if (position === "left") {
-    while (len < length) {
+
+    while (len < 2) {
       num = "0" + num;
       len++;
     }
-  } else if (position === "right") {
-    while (len < length) {
-      num = num + "0";
-      len++;
-    }
-  }
+  
   return num;
 }
 function forward() {
@@ -119,7 +112,7 @@ function refrush() {
   if (initok) {
     document.getElementById("len").ariaValueNow = Math.floor(document.getElementById("player").currentTime)
     if (document.getElementById("player").duration) {
-      document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero({ num: Math.floor(document.getElementById("player").currentTime) % 60 })) + " / " + String(Math.floor(document.getElementById("player").duration / 60)) + ":" + String(_padZero({ num: Math.floor(document.getElementById("player").duration) % 60 }))
+      document.getElementById("nowtime").innerHTML = String(Math.floor(document.getElementById("player").currentTime / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").currentTime) % 60 )) + " / " + String(Math.floor(document.getElementById("player").duration / 60)) + ":" + String(_padZero(Math.floor(document.getElementById("player").duration) % 60 ))
     } document.title = musictagslist[nowmusic].tags.title + "-" + musictagslist[nowmusic].tags.artist
     document.getElementById("title").innerHTML = musictagslist[nowmusic].tags.title
     document.getElementById("artist").innerHTML = musictagslist[nowmusic].tags.artist
@@ -160,7 +153,7 @@ window.onload = function () {
     $("#int_").append("<p style='color:red'>Your browser does not support FileSystem Access API. Some functions may be limited.</p>")
   }
 
-  setInterval(() => {
+  setInterval(function(){
     refrush()
   }, 1000);
 
@@ -186,7 +179,7 @@ window.onload = function () {
     }
   }
 }
-const changeFavicon = link => {
+function changeFavicon(link){
   let $favicon = document.querySelector('link[rel="icon"]');
   // If a <link rel="icon"> element already exists,
   // change its href to the given link.
@@ -218,52 +211,6 @@ function validationEnd(str, appoint) {
   return false;
 }
 
-async function mntdir() {
-  try {
-    const dirHandle = await window.showDirectoryPicker();
-    for await (const entry of dirHandle.values()) {
-      if (entry.kind == "file") {
-        if (validationEnd(entry.name, ".mp3")) {
-          $("#int_").remove()
-          if (num % 2) {
-            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect">' + entry.name + '</a>')
-          } else {
-            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-primary waves-effect">' + entry.name + '</a>')
-          }
-          musiclist.push(entry.name)
-          file_ = await entry.getFile()
-          await musicfilelist.push(file_)
-          var tags = {};
-          jsmediatags.read(file_, {
-            onSuccess: function (tag) {
-              musictagslist.push(tag)
-
-            },
-            onError: function (error) {
-            }
-          });
-          num++
-        } else if (validationEnd(entry.name, ".lrc")) {
-          $("#int_").remove()
-          if (num % 2) {
-            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect">' + entry.name + '</a>')
-          } else {
-            $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-primary waves-effect">' + entry.name + '</a>')
-          }
-          musiclist.push(entry.name)
-          file_ = await entry.getFile()
-          await musicfilelist.push(file_)
-          musictagslist.push("lrc")
-          num++
-        }
-      }
-    }
-
-  }
-  catch (e) {
-    console.error(e);
-  }
-}
 function mntdir_() {
   for (let index = 0; index < document.getElementById("intAlt").files.length; index++) {
     const element = document.getElementById("intAlt").files[index];
