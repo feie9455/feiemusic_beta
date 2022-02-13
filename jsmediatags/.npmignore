@@ -1,0 +1,10 @@
+.DS_Store
+node_modules
+src
+.babelrc
+.flowconfig
+.gitignore
+browser.js
+publish.sh
+build2/__mocks__/
+build2/__tests__/
