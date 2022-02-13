@@ -38,7 +38,7 @@ async function mntdir() {
           }
         }
       }
-  
+      loadsuccess()
     }
     catch (e) {
       console.error(e);

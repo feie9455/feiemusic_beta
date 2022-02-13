@@ -79,7 +79,8 @@
         <i class="fas fa-arrows-alt" style="display: inline;float: right;position: relative;top: -154px;right: -26px;"
           id="drag"></i>
         <i class="fas fa-image" style="float: right;margin-right: 8px;position: relative;top: -154px;right: -24px;"
-          onclick="bgp()"></i><br><br>
+          onclick="bgp()"></i>
+          <br><br>
         <p class="card-text" style="height: 8px;position: relative;top: -20px;text-align: center;" id="lyc">暂无歌词</p>
 
         <div class="progress md-progress">
@@ -112,17 +113,22 @@
       style="z-index: 1;padding: 10px 0px 0px 0px;width: 400px;position: relative;top:-12px">
       <div style="height: 350px;padding: 0px;width: 400px;position: relative;top: -2px;z-index: 0" id="mlist">
         <div style="height: 100%;width: 100%;" id="int_">
-          <button class="btn aqua-gradient" onclick="mntdir()" id="intG" style="margin-top: 150px;">选择歌曲文件夹</button>
+          <button class="btn aqua-gradient" onclick="mntdir()" id="intG" style="margin-top: 100px;">选择歌曲文件夹</button>
           <input class="btn aqua-gradient" type="file" id="intAlt" style="display: none;margin-top: 128px;"
             webkitdirectory multiple="true">
-          </button>
+          </button><br>
         </div>
         <div class="list-group">
         </div>
       </div>
     </div>
-
+<div class="card" style="width: 180px;height: 80px;position: relative;bottom: 850px;left: 300px;z-index: 500;display: none;padding: 8px;" id="savepicConfirm">
+  <p style="margin-bottom: 0px;"> Save this pictrue?</p>
+  <button type="button" class="btn btn-light btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;" onclick="$('#savepicConfirm').css('display','none')">No</button>
+  <button type="button" class="btn btn-success btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;" onclick="$('#savepicConfirm').css('display','none');savepictrue()">Yes</button>
+</div>
   </div>
+  
   <canvas id="tutorial" width="64" height="64" style="display: none;"></canvas>
 
 </body>

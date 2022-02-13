@@ -146,23 +146,14 @@ function refrush() {
 function next() {
   gforward()
 }
-//document.querySelector("#drag").ondrag = function () {
-//  console.log('拖拽中');
-//  $("#main").css("top", event.pageY - 24)
-//  $("#main").css("left", event.pageX - 360)
-//}
-//
-//document.querySelector("#drag").ondragend = function () {
-//  $("#main").css("top", event.pageY - 24)
-//  $("#main").css("left", event.pageX - 360)
-//}
-//
+
 function bgp() {
   $("#file").trigger("click");
 }
 function getFilePath() {
   $("body").css("background-image", URL.createObjectURL(document.getElementById("file").files[0]))
   document.body.background = URL.createObjectURL(document.getElementById("file").files[0])
+  $('#savepicConfirm').css('display', 'inline')
 }
 window.onload = function () {
   if (!window.showDirectoryPicker) {
@@ -171,7 +162,10 @@ window.onload = function () {
     document.getElementById("intAlt").addEventListener("change", function () { mntdir_() })
     $("#int_").append("<p style='color:red'>Your browser does not support FileSystem Access API. Some functions may be limited.</p>")
   }
+  if (localStorage.getItem("bgpic")) {
+    document.body.background = localStorage.getItem("bgpic")
 
+  }
   setInterval(function () {
     refrush()
   }, 1000);
@@ -216,8 +210,6 @@ function changeFavicon(link) {
 //list script
 num = 0
 
-
-//str：字符串    appoint：指定字符
 function validationEnd(str, appoint) {
   str = str.toLowerCase();  //不区分大小写：全部转为小写后进行判断
 
@@ -270,6 +262,7 @@ function mntdir_() {
 
     }
   }
+  loadsuccess()
 }
 function c(music) {
   nowmusic = music
@@ -280,3 +273,23 @@ function c(music) {
   refrush()
 }
 
+function loadsuccess() {
+
+}
+
+function savepictrue() {
+  bgpic = document.getElementById("file").files[0]
+  var reader = new FileReader();
+  reader.readAsDataURL(bgpic);
+  reader.onload = function (ev) { 
+    var dataURL = ev.target.result;
+    if (localStorage.getItem("bgpic")) {
+      localStorage.removeItem("bgpic");
+    }
+    try {
+      localStorage.setItem("bgpic", dataURL);
+    } catch (error) {
+      alert("Picture is too large. I cannot handle it. (っ °Д °;)っ")
+    }
+  }
+}
