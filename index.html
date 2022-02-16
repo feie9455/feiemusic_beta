@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/css/mdb.min.css">
   <!-- Your custom styles (optional) -->
   <link rel="stylesheet" href="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/css/style.css">
+  <link rel="stylesheet" href="scrollbar.css">
 </head>
 <style>
   body {
@@ -30,47 +31,26 @@
     border: 0px;
   }
 
-  #mlist {
-
+  .example-1 {
     position: relative;
+    overflow-y: scroll;
     overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  #mlist::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    background-color: #F5F5F5;
-  }
-
-  #mlist::-webkit-scrollbar {
-    width: 12px;
-    background-color: #F5F5F5;
-  }
-
-  #mlist::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-    background-color: #555;
   }
 </style>
 
 <body
-  style="background-repeat: no-repeat;background-size: auto 100vh;background-color: black;background-position:center;height: 100vh;">
+  style="background-repeat: no-repeat;background-size: auto 100vh;background-color: black;background-position:center;height: 100vh;overflow: hidden;">
 
   <!-- Start your project here-->
   <input type="file" id="file" onchange="getFilePath()" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
   <audio id="player" style="display: none;" ended="next()"></audio>
   <div style="width: 432px;position: absolute;right: 20px; " id="main" class="card card-cascade wider">
     <div class="view view-cascade gradient-card-header  purple-gradient" style="z-index: 100;">
+      <h5 style="position: relative;right: 128px;margin-bottom: -24px;">Feiemusic</h5>
       <div class="view overlay" style="padding: 32px 32px 0px 32px;">
         <div class="card card-cascade wider">
           <div style="height: 128px;padding: 24px;" class="view view-cascade gradient-card-header peach-gradient">
             <div class="flex-center flex-column">
-
               <h5 class="card-header-title mb-3" id="title" style="text-shadow: 0px 2px 10px black;">选择一首歌曲</h5>
               <h6 class="card-title" id="artist" style="font-size: medium;text-shadow: 0px 2px 4px black;">待定艺术家</h6>
             </div>
@@ -80,7 +60,7 @@
           id="drag"></i>
         <i class="fas fa-image" style="float: right;margin-right: 8px;position: relative;top: -154px;right: -24px;"
           onclick="bgp()"></i>
-          <br><br>
+        <br><br>
         <p class="card-text" style="height: 8px;position: relative;top: -20px;text-align: center;" id="lyc">暂无歌词</p>
 
         <div class="progress md-progress">
@@ -109,29 +89,36 @@
         </div>
       </div>
     </div>
-    <div class="card-body card-body-cascade text-center"
-      style="z-index: 1;padding: 10px 0px 0px 0px;width: 400px;position: relative;top:-12px">
-      <div style="height: 350px;padding: 0px;width: 400px;position: relative;top: -2px;z-index: 0" id="mlist">
-        <div style="height: 100%;width: 100%;" id="int_">
-          <button class="btn aqua-gradient" onclick="mntdir()" id="intG" style="margin-top: 100px;">选择歌曲文件夹</button>
-          <input class="btn aqua-gradient" type="file" id="intAlt" style="display: none;margin-top: 128px;"
-            webkitdirectory multiple="true">
-          </button><br>
-        </div>
-        <div class="list-group">
-        </div>
+    <div class="card-body card-body-cascade"
+      style="z-index: 1;padding: 10px 0px 0px 0px;width: 400px;position: relative;top:-12px;overflow: hidden;">
+        <div class="card example-1 scrollbar-near-moon text-center;" style="height: 350px;padding: 0px;width: 400px;position: relative;top: -2px;z-index: 0" id="mlist">
+          <div style="height: 100%;width: 100%;text-align: center;" id="int_">
+            <button class="btn aqua-gradient" onclick="mntdir()" id="intG" style="margin-top: 100px;">选择歌曲文件夹</button>
+            <input class="btn aqua-gradient" type="file" id="intAlt" style="display: none;margin-top: 128px;"
+              webkitdirectory multiple="true">
+            </button><br>
+          </div>
+          <div class="list-group">
+          </div>
       </div>
     </div>
+    <button type="button" class="btn-floating btn-primary" onclick="changeplaymode(this.value)"
+      style="position: relative;bottom: 640px;z-index: 500;left: 340px;">
+      <i class="fas fa-exchange-alt" id="playmode"></i>
+    </button>
+    <div class="card"
+      style="width: 180px;height: 80px;position: relative;bottom: 920px;left: 300px;z-index: 500;display: none;padding: 8px;"
+      id="savepicConfirm">
+      <p style="margin-bottom: 0px;"> Save this pictrue?</p>
+      <button type="button" class="btn btn-light btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;"
+        onclick="$('#savepicConfirm').css('display','none')">No</button>
+      <button type="button" class="btn btn-success btn-sm"
+        style="width: 60px;display: inline;padding: 0px;height: 30px;"
+        onclick="$('#savepicConfirm').css('display','none');savepictrue()">Yes</button>
+    </div>
 
-<button type="button" class="btn-floating btn-primary" onclick="changeplaymode(this.value)" style="position: relative;bottom: 640px;z-index: 500;left: 340px;">
-  <i class="fas fa-exchange-alt" id="playmode"></i>
-</button><div class="card" style="width: 180px;height: 80px;position: relative;bottom: 920px;left: 300px;z-index: 500;display: none;padding: 8px;" id="savepicConfirm">
-  <p style="margin-bottom: 0px;"> Save this pictrue?</p>
-  <button type="button" class="btn btn-light btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;" onclick="$('#savepicConfirm').css('display','none')">No</button>
-  <button type="button" class="btn btn-success btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;" onclick="$('#savepicConfirm').css('display','none');savepictrue()">Yes</button>
-</div>
   </div>
-  
+
   <canvas id="tutorial" width="64" height="64" style="display: none;"></canvas>
 
 </body>
@@ -148,7 +135,8 @@
 <script type="text/javascript" src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/mdb.min.js"></script>
 <!-- Your custom scripts (optional) -->
 <script src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/jsmediatags.js"></script>
-<script type="text/javascript" src="index.js">
+<script type="text/javascript" src="player.js"></script>
+  <script type="text/javascript" src="fileReader.js">
 </script>
 
 

@@ -1,17 +1,13 @@
-play = false
-ca = document.getElementById('tutorial')
-musiclist = []
-musicfilelist = []
-musictagslist = []
-musicpiclist = []
-musictpiclist = []
-tpicdata = []
-playedlist = []
-nowmusic = null
-initok = false
+"use strict"
+var play = false
+var ca = document.getElementById('tutorial')
+var musiclist = [], musicfilelist = [], musictagslist = [], musicpiclist = [], musictpiclist = [], tpicdata = [], playedlist = []
+var nowmusic = null
+var initok = false
 var jsmediatags = window.jsmediatags;
-playmode = 1
-nowplaynum = 0
+var playmode = 1
+var nowplaynum = 0
+var url
 function startstop() {
   if (play) {
     play = false
@@ -27,9 +23,7 @@ function startstop() {
       nowmusic = 0
       $("#player")[0].src = URL.createObjectURL(musicfilelist[nowmusic])
       playedlist.push(nowmusic)
-
     }
-
     $("#player")[0].play()
     document.querySelector("#c" + nowmusic).scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     for (let index = 0; index < musicfilelist.length; index++) {
@@ -49,7 +43,6 @@ function startstop() {
       $("#c" + nowmusic).removeClass("list-group-item list-group-item-action list-group-item-primary waves-effect")
       $("#c" + nowmusic).addClass("list-group-item list-group-item-action list-group-item-warning waves-effect")
     }
-
     const element = musictagslist[nowmusic];
     var picture = element.tags.picture; // create reference to track art 
     var base64String = "";
@@ -57,7 +50,6 @@ function startstop() {
       base64String += String.fromCharCode(picture.data[i]);
     }
     var imageUri = "data:" + picture.format + ";base64," + window.btoa(base64String);
-
     var img = new Image();
     img.src = imageUri
     var canvas = document.getElementById('tutorial');
@@ -66,17 +58,7 @@ function startstop() {
       ctx.drawImage(img, 0, 0, 64, 64)
       imageUri = canvas.toDataURL("image/jpeg", 1)
       changeFavicon(imageUri)
-        ;
-
     }, 200);
-
-    //    imgdata = ctx.getImageData(0, 0, 64, 64)
-    //    var base64String = "";
-    //    for (var i = 0; i < imgdata.data.length; i++) {
-    //        base64String += String.fromCharCode(imgdata.data[i]);
-    //    }
-    //    var imageUri = "data:" + imgdata.format + ";base64," + window.btoa(base64String);
-
   }
 }
 
@@ -90,10 +72,12 @@ function _padZero(num) {
 
   return num;
 }
+
 function forward() {
   document.getElementById("player").currentTime = document.getElementById("player").currentTime + 10
   refrush()
 }
+
 function backward() {
   if (document.getElementById("player").currentTime >= 10) {
     document.getElementById("player").currentTime = document.getElementById("player").currentTime - 10
@@ -102,6 +86,7 @@ function backward() {
   }
   refrush()
 }
+
 function gforward() {
   if (playmode) {
     if (musicfilelist.length - 1 >= nowmusic + 1) {
@@ -113,13 +98,10 @@ function gforward() {
         nowmusic = 0
       }
     }
-
   } else {
-    nowmusic = Math.ceil(Math.random() * musiclist.length)-1
+    nowmusic = Math.ceil(Math.random() * musiclist.length) - 1
     url = URL.createObjectURL(musicfilelist[nowmusic])
-
   }
-
   document.getElementById("player").src = url
   play = false
   startstop()
@@ -128,17 +110,16 @@ function gforward() {
   nowplaynum++
   nowplaynum = playedlist.length - 1
 }
+
 function gbackward() {
   if (playmode) {
     if (nowmusic >= 1) {
       url = URL.createObjectURL(musicfilelist[nowmusic - 1])
       nowmusic = nowmusic - 1
     } else {
-
       url = URL.createObjectURL(musicfilelist[musicfilelist.length - 1])
       nowmusic = musicfilelist.length - 1
     }
-
   } else {
     if (nowplaynum - 1 >= 0) {
       nowmusic = playedlist[nowplaynum - 1]
@@ -153,10 +134,7 @@ function gbackward() {
   play = false
   startstop()
   refrush()
-
-
 }
-
 
 function refrush() {
   if (initok) {
@@ -175,6 +153,7 @@ function refrush() {
     $("#len").css("width", String(Math.floor(document.getElementById("player").currentTime) / Math.floor(document.getElementById("player").duration) * 100 + "%"));
   }
 }
+
 function next() {
   gforward()
 }
@@ -182,6 +161,7 @@ function next() {
 function bgp() {
   $("#file").trigger("click");
 }
+
 function getFilePath() {
   $("body").css("background-image", URL.createObjectURL(document.getElementById("file").files[0]))
   document.body.background = URL.createObjectURL(document.getElementById("file").files[0])
@@ -224,78 +204,7 @@ window.onload = function () {
     }
   }
 }
-function changeFavicon(link) {
-  let $favicon = document.querySelector('link[rel="icon"]');
-  // If a <link rel="icon"> element already exists,
-  // change its href to the given link.
-  if ($favicon !== null) {
-    $favicon.href = link;
-    // Otherwise, create a new element and append it to <head>.
-  } else {
-    $favicon = document.createElement("link");
-    $favicon.rel = "icon";
-    $favicon.href = link;
-    document.head.appendChild($favicon);
-  }
-};
 
-//list script
-num = 0
-
-function validationEnd(str, appoint) {
-  str = str.toLowerCase();  //不区分大小写：全部转为小写后进行判断
-
-  var start = str.length - appoint.length;  //相差长度=字符串长度-特定字符长度
-  var char = str.substr(start, appoint.length);//将相差长度作为开始下标，特定字符长度为截取长度
-
-  if (char == appoint) { //两者相同，则代表验证通过
-    return true;
-  }
-  return false;
-}
-
-function mntdir_() {
-  for (let index = 0; index < document.getElementById("intAlt").files.length; index++) {
-    const element = document.getElementById("intAlt").files[index];
-    if (validationEnd(element.name, ".mp3")) {
-
-      musicfilelist.push(element)
-      musiclist.push(element.name)
-      musicfilelist
-      $("#int_").css("display", "none")
-      if (num % 2) {
-        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect" id="c' + num + '">' + element.name + '</a>')
-      } else {
-        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary waves-effect" id="c' + num + '">' + element.name + '</a>')
-      }
-
-      var tags = {};
-      jsmediatags.read(element, {
-        onSuccess: function (tag) {
-          musictagslist.push(tag)
-
-        },
-        onError: function (error) {
-        }
-      });
-
-      num++
-    } else if (validationEnd(element.name, ".lrc")) {
-      musicfilelist.push(element)
-      musiclist.push(element.name)
-      musicfilelist
-      $("#int_").remove()
-      if (num % 2) {
-        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action list-group-item-dark waves-effect" id="c' + num + '">' + element.name + '</a>')
-      } else {
-        $(".list-group").append('<a href="javascript:c(' + num + ')" class="list-group-item list-group-item-action  list-group-item-primary waves-effect" id="c' + num + '">' + element.name + '</a>')
-      }
-
-
-    }
-  }
-  loadsuccess()
-}
 function c(music) {
   nowmusic = music
   url = URL.createObjectURL(musicfilelist[music])
@@ -342,7 +251,21 @@ function changeplaymode() {
       playmode = 2
       $("#playmode").removeClass("fas fa-exchange-alt");
       $("#playmode").addClass("fas fa-redo");
-
       break;
   }
 }
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+function changeFavicon(link) {
+  let $favicon = document.querySelector('link[rel="icon"]');
+  if ($favicon !== null) {
+    $favicon.href = link;
+  } else {
+    $favicon = document.createElement("link");
+    $favicon.rel = "icon";
+    $favicon.href = link;
+    document.head.appendChild($favicon);
+  }
+};
+
