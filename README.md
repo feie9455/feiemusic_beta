@@ -2,6 +2,8 @@
 
 A html5 local music player can be used as wallpaper.
 
+_Supoort is now not good on phones_
+
 An online example: [Example](https://kenc.top/music)
 
 You can also find on Steam community: [Steam community](https://steamcommunity.com/sharedfiles/filedetails/?id=2751141507)
