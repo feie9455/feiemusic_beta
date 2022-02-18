@@ -93,7 +93,20 @@
       style="z-index: 1;padding: 10px 0px 0px 0px;width: 400px;position: relative;top:-12px;overflow: hidden;">
         <div class="card example-1 scrollbar-near-moon text-center;" style="height: 350px;padding: 0px;width: 400px;position: relative;top: -2px;z-index: 0" id="mlist">
           <div style="height: 100%;width: 100%;text-align: center;" id="int_">
-            <button class="btn aqua-gradient" onclick="mntdir()" id="intG" style="margin-top: 100px;">选择歌曲文件夹</button>
+            <button class="btn aqua-gradient" onclick="getMusicObj()" id="intG" style="margin-top: 100px;">选择歌曲文件夹</button><Br><Br>
+              <div class="preloader-wrapper small active" id="loading" style="display: none;">
+                <div class="spinner-layer spinner-yellow-only">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
             <input class="btn aqua-gradient" type="file" id="intAlt" style="display: none;margin-top: 128px;"
               webkitdirectory multiple="true">
             </button><br>
@@ -102,7 +115,7 @@
           </div>
       </div>
     </div>
-    <button type="button" class="btn-floating btn-primary" onclick="changeplaymode(this.value)"
+    <button type="button" class="btn-floating btn-primary" onclick="changeplaymode()"
       style="position: relative;bottom: 640px;z-index: 500;left: 340px;">
       <i class="fas fa-exchange-alt" id="playmode"></i>
     </button>
@@ -136,9 +149,8 @@
 <!-- Your custom scripts (optional) -->
 <script src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/jsmediatags.js"></script>
 <script type="text/javascript" src="player.js"></script>
-  <script type="text/javascript" src="fileReader.js">
-</script>
-
-
+<script type="text/javascript" src="fileReader.js"></script>
+<script type="text/javascript" src="mnt.js"></script>
+<script type="text/javascript" src="validationEnd.js"></script>
 
 </html>
