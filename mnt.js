@@ -30,10 +30,13 @@ async function mntdir() {
           let music = new Fmusic(entry.name, entry, "lrc")
           musicfilelist.push(music)
 
+<<<<<<< HEAD
         }else if(validationEnd(entry.name, ".mp4")||validationEnd(entry.name, ".webm")){
           let music = new Fmusic(entry.name, entry, "video")
           musicfilelist.push(music)
 
+=======
+>>>>>>> 06cb3dea048f6d7528b9dbc14ff9d26209c2977d
         }
       }
     }
