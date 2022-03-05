@@ -43,11 +43,14 @@
 
   <!-- Start your project here-->
   <input type="file" id="file" onchange="getFilePath()" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" />
-  <audio id="player" style="display: none;" ended="next()"></audio>
-  <div style="width: 432px;position: absolute;right: 20px; " id="main" class="card card-cascade wider">
-    <div class="view view-cascade gradient-card-header  purple-gradient" style="z-index: 100;">
-      <h5 style="position: relative;right: 128px;margin-bottom: -24px;">Feiemusic</h5>
-      <div class="view overlay" style="padding: 32px 32px 0px 32px;">
+  <video id="player" style="top: 0px;left: 0px;position: absolute;height: 100vh;width: 100vw;" ended="next()"></video>        
+
+  <div style="width: 432px;position: absolute;right: 20px;top:20px;opacity: 90%;" id="main" class="card card-cascade wider">
+      <i class="fas fa-image" style="float: right;margin-right: 8px;position: relative;top: 46px;right: -380px;z-index: 100;color: aliceblue;text-shadow: 0px 2px 10px black;"
+          onclick="bgp()"></i>
+    <div class="view view-cascade gradient-card-header  purple-gradient" style="z-index: 2;">
+      <h5 style="position: relative;right: 128px;margin-bottom: -24px; text-shadow: 0px 2px 10px black;">Feiemusic</h5>
+      <div class="view overlay" style="padding: 32px 32px 0px 32px;z-index: 3;">
         <div class="card card-cascade wider">
           <div style="height: 128px;padding: 24px;" class="view view-cascade gradient-card-header peach-gradient">
             <div class="flex-center flex-column">
@@ -56,10 +59,8 @@
             </div>
           </div>
         </div>
-        <i class="fas fa-arrows-alt" style="display: inline;float: right;position: relative;top: -154px;right: -26px;"
-          id="drag"></i>
-        <i class="fas fa-image" style="float: right;margin-right: 8px;position: relative;top: -154px;right: -24px;"
-          onclick="bgp()"></i>
+
+
         <br><br>
         <p class="card-text" style="height: 8px;position: relative;top: -20px;text-align: center;" id="lyc">暂无歌词</p>
 
@@ -93,21 +94,32 @@
       style="z-index: 1;padding: 10px 0px 0px 0px;width: 400px;position: relative;top:-12px;overflow: hidden;">
         <div class="card example-1 scrollbar-near-moon text-center;" style="height: 350px;padding: 0px;width: 400px;position: relative;top: -2px;z-index: 0" id="mlist">
           <div style="height: 100%;width: 100%;text-align: center;" id="int_">
-            <button class="btn aqua-gradient" onclick="mntdir()" id="intG" style="margin-top: 100px;">选择歌曲文件夹</button>
-            <input class="btn aqua-gradient" type="file" id="intAlt" style="display: none;margin-top: 128px;"
-              webkitdirectory multiple="true">
+            <button class="btn aqua-gradient" onclick="getMusicObj()" id="intG" style="margin-top: 100px;">选择歌曲文件夹</button><Br><Br>
+              <div class="preloader-wrapper small active" id="loading" style="display: none;">
+                <div class="spinner-layer spinner-yellow-only">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
             </button><br>
           </div>
           <div class="list-group">
           </div>
       </div>
     </div>
-    <button type="button" class="btn-floating btn-primary" onclick="changeplaymode(this.value)"
+    <button type="button" class="btn-floating btn-primary" onclick="changeplaymode()"
       style="position: relative;bottom: 640px;z-index: 500;left: 340px;">
       <i class="fas fa-exchange-alt" id="playmode"></i>
     </button>
     <div class="card"
-      style="width: 180px;height: 80px;position: relative;bottom: 920px;left: 300px;z-index: 500;display: none;padding: 8px;"
+      style="width: 180px;height: 80px;position: relative;bottom: 920px;left: 300px;z-index: 2;display: none;padding: 8px;"
       id="savepicConfirm">
       <p style="margin-bottom: 0px;"> Save this pictrue?</p>
       <button type="button" class="btn btn-light btn-sm" style="width: 60px;display: inline;padding: 0px;height: 30px;"
@@ -116,6 +128,7 @@
         style="width: 60px;display: inline;padding: 0px;height: 30px;"
         onclick="$('#savepicConfirm').css('display','none');savepictrue()">Yes</button>
     </div>
+    <div id="drag" style="width: 432px;height: 60px;position: relative;bottom: 860px;z-index: 3;"></div>
 
   </div>
 
@@ -135,10 +148,8 @@
 <script type="text/javascript" src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/mdb.min.js"></script>
 <!-- Your custom scripts (optional) -->
 <script src="https://feiedl.oss-cn-hangzhou.aliyuncs.com/websrc/music/js/jsmediatags.js"></script>
-<script type="text/javascript" src="player.js"></script>
-  <script type="text/javascript" src="fileReader.js">
-</script>
-
-
+<script type="text/javascript" src="player1.js"></script>
+<script type="text/javascript" src="mnt.js"></script>
+<script type="text/javascript" src="validationEnd.js"></script>
 
 </html>
